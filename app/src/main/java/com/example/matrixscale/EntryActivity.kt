@@ -20,13 +20,13 @@ import com.example.matrixscale.databinding.ActivityEntryBinding
 class EntryActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityEntryBinding
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityEntryBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
-        
+
         binding.imageSelector.adapter = ArrayAdapter(
             this, android.R.layout.simple_spinner_item, ImagesTypeEnum.values()
         )
@@ -85,6 +85,15 @@ class EntryActivity : AppCompatActivity() {
 
         binding.buttonMatrixPage.setOnClickListener {
             startActivity(Intent(this, TurnPageActivity::class.java))
+        }
+
+        binding.buttonBlurExample.setOnClickListener {
+            startActivity(
+                Intent(
+                    this,
+                    BlurEndCropView::class.java
+                )
+            )
         }
     }
 }

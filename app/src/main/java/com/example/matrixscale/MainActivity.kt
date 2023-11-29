@@ -19,6 +19,14 @@ class MainActivity : AppCompatActivity() {
         const val MATRIX_BASED_KEY = "MATRIX_BASED_KEY"
         const val MATRIX_BASED_SCALE_KEY = "MATRIX_BASED_SCALE_KEY"
         const val SCROLLER_TYPE = "SCROLLER_TYPE_KEY"
+
+        fun getImageViewWidth(imageView: ImageView): Int {
+            return imageView.width - imageView.paddingLeft - imageView.paddingRight
+        }
+
+        fun getImageViewHeight(imageView: ImageView): Int {
+            return imageView.height - imageView.paddingTop - imageView.paddingBottom
+        }
     }
 
     private val baseMatrix = Matrix()
@@ -30,11 +38,14 @@ class MainActivity : AppCompatActivity() {
         setContentView(view)
 
         binding.imagePicture.apply {
-            layoutParams.height = (intent.getSerializableExtra(SIZE_TYPE_KEY) as SizeTypeEnum).layoutParams.first
-            layoutParams.width = (intent.getSerializableExtra(SIZE_TYPE_KEY) as SizeTypeEnum).layoutParams.second
+            layoutParams.height =
+                (intent.getSerializableExtra(SIZE_TYPE_KEY) as SizeTypeEnum).layoutParams.first
+            layoutParams.width =
+                (intent.getSerializableExtra(SIZE_TYPE_KEY) as SizeTypeEnum).layoutParams.second
             setImageResource((intent.getSerializableExtra(IMAGE_TYPE_KEY) as ImagesTypeEnum).imageId)
             adjustViewBounds = intent.getBooleanExtra(ADJUST_KEY, false)
-            (this as MovableImageView).scrollerType = intent.getSerializableExtra(SCROLLER_TYPE) as RadioScollerEnum
+            (this as MovableImageView).scrollerType =
+                intent.getSerializableExtra(SCROLLER_TYPE) as RadioScollerEnum
 
             scaleType = if (intent.getBooleanExtra(MATRIX_BASED_KEY, false)) {
                 val matrixBasedScaleTypeEnum =
@@ -67,6 +78,7 @@ class MainActivity : AppCompatActivity() {
                     (viewHeight - drawableHeight) / 2f
                 )
             }
+
             MatrixBasedScaleTypeEnum.CENTER_CROP -> {
                 val scale = widthScale.coerceAtLeast(heightScale)
                 baseMatrix.postScale(scale, scale)
@@ -75,10 +87,12 @@ class MainActivity : AppCompatActivity() {
                     (viewHeight - drawableHeight * scale) / 2f
                 )
             }
+
             MatrixBasedScaleTypeEnum.START_CROP -> {
                 val scale = widthScale.coerceAtLeast(heightScale)
                 baseMatrix.postScale(scale, scale)
             }
+
             MatrixBasedScaleTypeEnum.END_CROP -> {
                 val scale = widthScale.coerceAtLeast(heightScale)
                 baseMatrix.postScale(scale, scale)
@@ -87,6 +101,7 @@ class MainActivity : AppCompatActivity() {
                     (viewHeight - drawableHeight * scale)
                 )
             }
+
             MatrixBasedScaleTypeEnum.CENTER_INSIDE -> {
                 val scale =
                     1.0f.coerceAtMost(widthScale.coerceAtMost(heightScale))
@@ -96,6 +111,7 @@ class MainActivity : AppCompatActivity() {
                     (viewHeight - drawableHeight * scale) / 2f
                 )
             }
+
             else -> {
                 val tempSrc = RectF(0f, 0f, drawableWidth.toFloat(), drawableHeight.toFloat())
                 val tempDst = RectF(0f, 0f, viewWidth, viewHeight)
@@ -105,21 +121,25 @@ class MainActivity : AppCompatActivity() {
                         tempDst,
                         Matrix.ScaleToFit.CENTER
                     )
+
                     MatrixBasedScaleTypeEnum.FIT_START -> baseMatrix.setRectToRect(
                         tempSrc,
                         tempDst,
                         Matrix.ScaleToFit.START
                     )
+
                     MatrixBasedScaleTypeEnum.FIT_END -> baseMatrix.setRectToRect(
                         tempSrc,
                         tempDst,
                         Matrix.ScaleToFit.END
                     )
+
                     MatrixBasedScaleTypeEnum.FIT_XY -> baseMatrix.setRectToRect(
                         tempSrc,
                         tempDst,
                         Matrix.ScaleToFit.FILL
                     )
+
                     else -> {
                     }
                 }
@@ -127,14 +147,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.imagePicture.imageMatrix = baseMatrix
-    }
-
-    private fun getImageViewWidth(imageView: ImageView): Int {
-        return imageView.width - imageView.paddingLeft - imageView.paddingRight
-    }
-
-    private fun getImageViewHeight(imageView: ImageView): Int {
-        return imageView.height - imageView.paddingTop - imageView.paddingBottom
     }
 
 }

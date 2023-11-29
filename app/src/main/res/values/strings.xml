@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MatrixScale</string>
+    <string name="blur_example">Blur example</string>
 </resources>
