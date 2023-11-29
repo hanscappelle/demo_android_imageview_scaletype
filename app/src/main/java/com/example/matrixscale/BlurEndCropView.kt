@@ -1,16 +1,15 @@
 package com.example.matrixscale
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Color
 import android.graphics.Matrix
+import android.graphics.RenderEffect
+import android.graphics.Shader
 import android.os.Bundle
+import android.view.View
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.matrixscale.MainActivity.Companion.getImageViewHeight
 import com.example.matrixscale.MainActivity.Companion.getImageViewWidth
 import com.example.matrixscale.databinding.ViewBlurBinding
-
 
 class BlurEndCropView : AppCompatActivity() {
 
@@ -26,11 +25,10 @@ class BlurEndCropView : AppCompatActivity() {
 
         binding.blurred.apply {
             scaleType = ImageView.ScaleType.MATRIX
-            addOnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+            addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
                 updateBaseMatrix(MatrixBasedScaleTypeEnum.END_CROP)
 
-                val bitmap = BitmapFactory.decodeResource(resources, R.drawable.athletic)
-                binding.blurred.setImageBitmap(applyGaussianBlur(bitmap))
+                applyBlur(binding.blurred, 16f)
 
             }
 
@@ -61,17 +59,16 @@ class BlurEndCropView : AppCompatActivity() {
 
     }
 
-    private fun applyGaussianBlur(src: Bitmap): Bitmap? {
-        val blurConfig = arrayOf(
-            doubleArrayOf(1.0, 2.0, 1.0),
-            doubleArrayOf(2.0, 4.0, 2.0),
-            doubleArrayOf(1.0, 2.0, 1.0)
+    /**
+     * source: https://developer.android.com/guide/topics/renderscript/migrate#image_blur_on_android_12_into_a_view
+     */
+    private fun applyBlur(view: View, radius: Float) {
+        val blurRenderEffect = RenderEffect.createBlurEffect(
+            radius, radius,
+            Shader.TileMode.MIRROR
         )
-        val convMatrix = ConvolutionMatrix(3)
-        convMatrix.applyConfig(blurConfig)
-        convMatrix.factor = 30f
-        convMatrix.offset = 0f
-        return ConvolutionMatrix.computeConvolution3x3(src, convMatrix)
+        view.setRenderEffect(blurRenderEffect)
+
     }
 
 }
