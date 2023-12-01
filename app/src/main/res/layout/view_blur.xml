@@ -13,6 +13,7 @@
         android:src="@drawable/athletic"
         android:background="@drawable/rounded_corners"
         android:clipToOutline="true"
+        android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

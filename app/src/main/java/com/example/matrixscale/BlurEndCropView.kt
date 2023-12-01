@@ -26,24 +26,23 @@ class BlurEndCropView : AppCompatActivity() {
         binding.blurred.apply {
             scaleType = ImageView.ScaleType.MATRIX
             addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
-                updateBaseMatrix(MatrixBasedScaleTypeEnum.END_CROP)
-
+                updateBaseMatrix()
                 applyBlur(binding.blurred, 16f)
-
             }
-
         }
     }
 
-    private fun updateBaseMatrix(scaleType: MatrixBasedScaleTypeEnum) {
+    /**
+     * source: https://github.com/elye/demo_android_imageview_scaletype
+     */
+    private fun updateBaseMatrix() {
         val drawable = binding.blurred.drawable ?: return
 
-        val viewWidth: Float = getImageViewWidth(binding.blurred).toFloat()
-        val viewHeight: Float = getImageViewHeight(binding.blurred).toFloat()
+        val viewWidth = getImageViewWidth(binding.blurred).toFloat()
+        val viewHeight = getImageViewHeight(binding.blurred).toFloat()
         val drawableWidth = drawable.intrinsicWidth
         val drawableHeight = drawable.intrinsicHeight
         val baseMatrix = Matrix()
-        //baseMatrix.reset() // only needed when matrix is a global property
         val widthScale = viewWidth / drawableWidth
         val heightScale = viewHeight / drawableHeight
 
@@ -56,7 +55,6 @@ class BlurEndCropView : AppCompatActivity() {
         )
 
         binding.blurred.imageMatrix = baseMatrix
-
     }
 
     /**
@@ -68,7 +66,6 @@ class BlurEndCropView : AppCompatActivity() {
             Shader.TileMode.MIRROR
         )
         view.setRenderEffect(blurRenderEffect)
-
     }
 
 }
